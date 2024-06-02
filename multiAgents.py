@@ -68,6 +68,11 @@ class ReflexAgent(Agent):
 
         Print out these variables to see what you're getting, then combine them
         to create a masterful evaluation function.
+
+        The evaluation functions checks the position of the new state if there is a ghost then
+        avoid it, if there is food take it. If none of the both cases then estimate distance to
+        closest food with Manhattan Distance dist and take the action with the least distance.
+        The evaluation functions returns -dist to ensure that higher values are better
         """
         # Useful information you can extract from a GameState (pacman.py)
         successorGameState = currentGameState.generatePacmanSuccessor(action)
