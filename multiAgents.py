@@ -164,7 +164,58 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        # For Pacman
+        def maxScore(gameState, currentDepth):
+            # Terminal Condition
+            if gameState.isWin() or gameState.isLose() or currentDepth >= self.depth:
+                return self.evaluationFunction(gameState)
+
+            score = float("-inf")
+            actions = gameState.getLegalActions(0)
+            for action in actions:
+                successor = gameState.generateSuccessor(0, action)
+                score = max(score, minScore(successor, currentDepth, 1))
+            return score
+
+        # For all ghosts
+        def minScore(gameState, currentDepth, currentAgent):
+            # Terminal condition for recursion by reaching terminal state or max depth
+            if gameState.isWin() or gameState.isLose() or currentDepth >= self.depth:
+                return self.evaluationFunction(gameState)
+
+            score = float("inf")
+            # Iterate trough actions of currentAgent which is a ghost
+            actions = gameState.getLegalActions(currentAgent)
+            for action in actions:
+                successor = gameState.generateSuccessor(currentAgent, action)
+                # Check if iterated trough all ghosts
+                if currentAgent < (gameState.getNumAgents() - 1):
+                    # Ghosts left, call MIN of next ghost (currentAgent + 1) and take min() compared
+                    # to current score
+                    score = min(
+                        score, minScore(successor, currentDepth, currentAgent + 1)
+                    )
+                else:
+                    # Iterated trough all ghost, next turn is Pacman. Call MAX and increase depth
+                    score = min(score, maxScore(successor, currentDepth + 1))
+
+            return score
+
+        # Pacman/MAX starts
+        actions = gameState.getLegalActions(0)
+        currentScore = float("-inf")
+        currentAction = ""
+        for action in actions:
+            nextState = gameState.generateSuccessor(0, action)
+            # Next layer is MIN from ghosts to minimize scores
+            nextScore = minScore(nextState, 0, 1)
+            # Select action that is maximum of the scores of the successors
+            if nextScore > currentScore:
+                currentAction = action
+                currentScore = nextScore
+
+        return currentAction
 
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
