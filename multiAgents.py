@@ -377,7 +377,7 @@ def betterEvaluationFunction(currentGameState: GameState):
         1. Number of foods and manhattan distance
         2. Number of capsules and manhattan distance
         3. Manhattan distance to ghosts
-    In addition the current game score with a big penalty score to force Pacman to finish fast.
+    In addition the current game score with a large weight as a reward for Pacman to finish fast.
     It does not take into special consideration if ghosts are scared.
     """
     "*** YOUR CODE HERE ***"
